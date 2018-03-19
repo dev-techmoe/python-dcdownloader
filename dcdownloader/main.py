@@ -2,7 +2,7 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
 
 
-from dcdownloader import aiodownloader, base_logger, config, aio_chapter_list
+from dcdownloader import aiodownloader, base_logger, config, aio_chapter_list, version
 from dcdownloader.utils import update_window_title
 import time, json, os
 
@@ -14,13 +14,13 @@ logger = base_logger.getLogger(__name__)
 def get_comic_index_page_url():
     print()
     url = None
-    while url == None:
+    while not url:
         url = input('Index page url of target comic: ')
     print() 
     return url
 
 def main():
-
+    version.show_welcome()
     logger.info('App launch')
     try:
         logger.debug('Load configure file')
