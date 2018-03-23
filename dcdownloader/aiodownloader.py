@@ -64,6 +64,7 @@ def launch_downloader(project_name, urls=dict(), output_path=config.get('output_
     global proj_dir, total_task_num
     
     proj_dir = output_path + '/' + project_name
+    utils.mkdir(proj_dir)
 
     events = []
     
