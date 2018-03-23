@@ -1,0 +1,24 @@
+language: python
+python:
+  - 3.6
+sudo: required
+services:
+  - docker
+script:
+  - chmod +x devscript/run_test.sh
+  - devscript/run_test.sh
+
+before_deploy:
+  - docker pull cdrx/pyinstaller-windows:python3
+  - docker run -v "$(pwd):/src/" -e "TRAVIS_BUILD_NUMBER=${TRAVIS_BUILD_NUMBER}" cdrx/pyinstaller-windows:python3 "chmod +x devscript/build.sh && devscript/build.sh"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: rsE8hL+4KQBaxcwBLbF0zMskg1y23Ek89enYUHWg4DhTJVm4aWLkkueRoysUJ8whkwzrxy9Ng/+rF8jQpP9Jn+4Yiu2IyK5UTGYOGOIJBHcMbtFSC461cq8Yp7Hy5NBE4HKzt6q/Ne1AfNOQyCiLD95wH+T46JX9rBWUT/m5y/VYfgOzNV+AkG8brcNLbS4OGZ2drBG1I8js16mFQg8k5VbyapP+wQhDe1rtvf9FAtdAWUL8/IOJUrvUItYr7xsnmmiK4I3D1/nUPuf7Ltqywpe6IOEqZlxGmMtuqhm79dequOtb29OD6AcjgCOLKdjUlQqR/IzPTpkyD0bmDCbQe+d+5ASejQ7gZrCWZ/obC8dJI7r64Z89Y/NriW6l+l+eAg1R++KTsh3jWW4pZwyANDnlJIRszGk2lTosgPqwE3NcFHsl+GclasaL3ADoVZJR/ibWXbewbj28nJr5STINTFKxprYwXCELH7Qyq/Y6UtDiDEAeBJOyJ7IPtLQaHSdSOV+giIsJBLEdcfU+ky+7Gkk6ZosSiNDbcMbTDOxRTLw1XVx1HaJHzT9zD3aKSs/NrwhTLTpJ/qv6UKaZe9F6pOQLY2BDnl4kDOB9Pjs9M+aZUWiWE+grpB7ucQCWvYcJx76Xd3jTcYDDRrKYZlcE0uSVoy7bbJMYRFfInreXmGI=
+  file: pyinstaller/dist/dcdownloader_windows_build${TRAVIS_BUILD_NUMBER}.exe
+  on:
+    repo: dev-techmoe/python-dcdownloader
+    tags: true
+  body: "auto published by CI, no more description now."
+  prerelease: true

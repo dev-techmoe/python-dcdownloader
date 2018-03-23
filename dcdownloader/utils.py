@@ -1,4 +1,4 @@
-import re
+import re, os
 from dcdownloader import config, title
 
 def decode_packed_codes(code):
@@ -59,3 +59,10 @@ def update_window_title(mode=None, msg=None):
 
     title.update(window_title)
     
+def mkdir(path):
+    path_  = path.split('/')
+
+    for i in range(0, len(path_)):
+        p = '/'.join(path_[0:i+1])
+        if p and not os.path.exists(p):
+            os.mkdir(p)

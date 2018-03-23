@@ -1,6 +1,11 @@
 # DCDownloader
 由Python编写的全异步实现的动漫之家(dmzj)漫画批量下载器（爬虫）
 
+![python](https://img.shields.io/badge/python-3.6.4%2B-green.svg)
+[![GitHub license](https://img.shields.io/github/license/dev-techmoe/python-dcdownloader.svg)](https://github.com/dev-techmoe/python-dcdownloader/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/dev-techmoe/python-dcdownloader.svg?branch=master)](https://travis-ci.org/dev-techmoe/python-dcdownloader)
+[![GitHub stars](https://img.shields.io/github/stars/dev-techmoe/python-dcdownloader.svg)](https://github.com/dev-techmoe/python-dcdownloader/stargazers)
+
 ## 说明
 这是一个使用Python3编写的动漫之家的漫画批量下载器。相比于我之前所写过的几个爬虫，这个爬虫也是我第一次尝试**全异步**实现的一个爬虫例子，使用了*aiohttp*和*aiofile*这两个异步实现库来做支撑，相对于单线程爬虫和多线程爬虫，使用异步(async)这种方式能够更好的分配计算和IO资源，保证了资源的充分利用以及速度。同时，这也是我第一次较为完整编写的一个Python开源项目。
 
@@ -25,11 +30,11 @@
 |配置项|说明|默认值|
 | ----- | ----- | ----- |
 |debug_mode|调试模式|False|
-|save_manifest_file|保存元数据以供增量下载 *未完成*|false|
+|save_manifest_file|保存元数据以供增量下载 *未完成*|False|
 |proxy|代理服务器|None|
 |downloader_max_connection_number|下载器并发数（最大同时下载任务数）|5|
 |downloader_max_retry_number|下载器最大重试次数|5|
-|friendly_console_output|人类友好的控制台输出 *未完成*|false|
+|friendly_console_output|人类友好的控制台输出 *未完成*|False|
 |header|自定义请求header|默认仅设置了ua和referer|
 
 ## 使用
