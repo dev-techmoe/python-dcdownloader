@@ -1,10 +1,11 @@
 # DCDownloader
-由Python编写的全异步实现的动漫之家(dmzj)漫画批量下载器（爬虫）
 
 ![python](https://img.shields.io/badge/python-3.6.4%2B-green.svg)
 [![GitHub license](https://img.shields.io/github/license/dev-techmoe/python-dcdownloader.svg)](https://github.com/dev-techmoe/python-dcdownloader/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/dev-techmoe/python-dcdownloader.svg?branch=master)](https://travis-ci.org/dev-techmoe/python-dcdownloader)
 [![GitHub stars](https://img.shields.io/github/stars/dev-techmoe/python-dcdownloader.svg)](https://github.com/dev-techmoe/python-dcdownloader/stargazers)
+
+由Python编写的全异步实现的动漫之家(dmzj)漫画批量下载器（爬虫）
 
 ## 说明
 这是一个使用Python3编写的动漫之家的漫画批量下载器。相比于我之前所写过的几个爬虫，这个爬虫也是我第一次尝试**全异步**实现的一个爬虫例子，使用了*aiohttp*和*aiofile*这两个异步实现库来做支撑，相对于单线程爬虫和多线程爬虫，使用异步(async)这种方式能够更好的分配计算和IO资源，保证了资源的充分利用以及速度。同时，这也是我第一次较为完整编写的一个Python开源项目。
@@ -21,7 +22,7 @@
     $ python3 setup.py install
     ```
 * Windows平台  
-    也可以采取上面的方法安装，也可以直接来下载运行预编译的二进制文件来使用(待补充)
+    依然可以通过安装python的方式来手动安装，也可以到[Release页面](https://github.com/dev-techmoe/python-dcdownloader/releases)下载打包好的二进制可执行文件来使用。
 
 ## 配置
 配置是可选的，您完全可以不用配置就使用本程序。  
