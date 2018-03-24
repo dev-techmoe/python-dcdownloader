@@ -1,0 +1,12 @@
+<html>
+<head>
+</head>
+<body>
+<h1>test_comic</h1>
+<ul class="chapter_list">
+    {% for i in chapter_list %}
+        <li><a href="/{{ i }}" >{{ i }}</a></li>
+    {% endfor %}
+</ul>
+</body>
+</html>

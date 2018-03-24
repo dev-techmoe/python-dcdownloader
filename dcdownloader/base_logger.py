@@ -8,7 +8,7 @@ def getLogger(name=__name__):
     logger_base.setLevel(logging_level)
     stream_handler = logging.StreamHandler()
 
-    color_formatter = ColoredFormatter('%(log_color)s[%(module)-15s][%(funcName)-20s][%(levelname)-8s] %(message)s')
+    color_formatter = ColoredFormatter('%(log_color)s[%(levelname)-8s] %(message)s')
     
     stream_handler.setFormatter(color_formatter)
 

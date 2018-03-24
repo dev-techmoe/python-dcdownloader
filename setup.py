@@ -8,7 +8,7 @@ setup(
     url='',
     license='MIT',
     packages=['dcdownloader'],
-    install_requires=['aiohttp', 'colorlog', 'aiofiles', 'pyquery', 'pyyaml'],
+    install_requires=['aiohttp', 'colorlog', 'aiofiles', 'pyquery', 'pyyaml', 'filetype'],
     entry_points="""
     [console_scripts]
     dcdownloader = dcdownloader.main:main

@@ -1,0 +1,14 @@
+<html>
+    <head>
+
+    </head>
+
+    <body>
+        <h1>{{ title }}</h1>
+        <ul>
+            {% for i in images.keys() %}
+                <li><img src="{{ images[i] }}" alt="{{ i }}"/></li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
