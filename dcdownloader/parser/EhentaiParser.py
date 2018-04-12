@@ -16,15 +16,18 @@ class EhentaiParser(metaclass=ABCMeta):
         doc = pq(data)
         _img_list = doc('.gdtm a')
 
-        i = 1
-        img_list = {}
+        img_list = []
         
         for img in _img_list:
             url = pq(img).attr('href')
-            img_list.setdefault(str(i), url)
-            i += 1
+            img_list.append(url)
         
-        return (img_list, )
+        next_page = doc('.ptds + td a')
+        next_page_url = None
+        if not next_page == None:
+            next_page_url = pq(next_page).attr('href')
+
+        return (img_list, next_page_url)
     
     async def parse_image_list(self, data):
         doc = pq(data)
@@ -37,7 +40,4 @@ class EhentaiParser(metaclass=ABCMeta):
         # return {
         #     'file_name': 'url'
         # }
-        pass
-
-    async def parse_downloaded_data(self, data):
         pass

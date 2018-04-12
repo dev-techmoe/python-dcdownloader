@@ -11,8 +11,8 @@ def main():
     
     from dcdownloader.scheduler import Scheduler
     from dcdownloader import parser_selector
-    from dcdownloader.parser.DmzjParser import DmzjParser
-    s = Scheduler(url=args.url, output_path=args.output_path, parser=parser_selector.get_parser(args.url))
+    s = Scheduler(url=args.url, output_path=args.output_path, parser=parser_selector.get_parser(args.url),
+                    fetch_only=args.fetch_only, proxy=args.proxy, verify_ssl=args.verify_ssl)
     s.run()
 
 

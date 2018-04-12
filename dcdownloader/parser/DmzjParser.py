@@ -43,6 +43,3 @@ class DmzjParser(BaseParser):
         for k in image_list:
             images.setdefault(k.split('/')[-1].split('.')[0], self.image_base_url + '/' + k)
         return images
-
-    async def parse_downloaded_data(self, data):
-        pass

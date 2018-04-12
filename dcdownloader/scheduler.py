@@ -17,7 +17,8 @@ class Scheduler(object):
     download_complete_number = 0
 
     def __init__(self, url, output_path='.', name='Scheduler', max_connection_num=10, max_retry_num=5, 
-                    proxy=None, header=None, save_manifest_file=False, parser=SimpleParser()):
+                    proxy=None, header=None, save_manifest_file=False, parser=SimpleParser(),
+                    fetch_only=False, verify_ssl=True):
         
         # usable config:
         # name: Scheduler instance name
@@ -35,6 +36,8 @@ class Scheduler(object):
         self.proxy = proxy
         self.header = None
         self.save_manifest_file = False
+        self.fetch_only = fetch_only
+        self.verify_ssl = verify_ssl
 
         self.sema = asyncio.Semaphore(self.max_connection_num)
 
@@ -44,7 +47,7 @@ class Scheduler(object):
             self.header = self.parser.request_header
 
         self.aiohttp_session = aiohttp.ClientSession(
-            connector=ProxyConnector(proxy=proxy, verify_ssl=False), headers=self.header, read_timeout=30)
+            connector=ProxyConnector(proxy=proxy, verify_ssl=self.verify_ssl), headers=self.header, read_timeout=30)
 
     def run(self):
         logger.info('Using parser %s ..', type(self.parser).__name__)
@@ -68,6 +71,7 @@ class Scheduler(object):
         
         logger.info('Fetch image url list')
         img_list = self._get_image_url_list(clist)
+        logger.info('Total image number: %s', self.total_image_num)
         logger.info('Start download images')
         self._start_download(img_list, info['name'])
         logger.info('Download comlpleted')
@@ -84,7 +88,7 @@ class Scheduler(object):
             on_fail_exit=True) 
         async def fetch(url):
             #async with aiohttp.ClientSession(connector=ProxyConnector(proxy='http://192.168.28.1:8888')) as sess:
-            async with self.aiohttp_session.get(url, verify_ssl=False) as resp:
+            async with self.aiohttp_session.get(url, verify_ssl=self.verify_ssl) as resp:
                 nonlocal info
                 ret_data = await resp.text()
                 info = await self.parser.parse_info(ret_data)
@@ -109,16 +113,22 @@ class Scheduler(object):
             on_retry=lambda err, args, retry_num: logger.warning('Failed to fetch chapter list %s (%s), retrying.', args[0][0],str(err)), 
             on_fail=lambda err, args, retry_num: logger.error('Failed to fetch chapter list %s (%s)', args[0][0],str(err)),
             on_fail_exit=True) 
-        async def fetch(url, asyncio_loop):
+        async def fetch(url, asyncio_loop, page=1):
             with (await self.sema):
                 async with self.aiohttp_session.get(url) as ret:
 
                     ret_data = await ret.text()
                     parsed_data = await self.parser.parse_chapter(ret_data)
-                    chapter_list.update( parsed_data[0] )
                     
-                    if len(parsed_data) > 1:
-                        asyncio_loop.ensure_future(fetch(ret_data[1], asyncio_loop))
+                    if self.parser.chapter_mode:
+                        chapter_list.update( parsed_data[0] )
+                    else:
+                        for i in parsed_data[0]:
+                            chapter_list.setdefault('{}-{}'.format(page,parsed_data[0].index(i)), i)
+                    
+                    if len(parsed_data) > 1 and not parsed_data[1] == None:
+                        page += 1
+                        await fetch(parsed_data[1], asyncio_loop, page)
         
         loop = asyncio.get_event_loop()
         loop.run_until_complete(asyncio.gather(fetch(base_url, loop)))
@@ -139,22 +149,30 @@ class Scheduler(object):
 
         #@retry(max_num=self.max_retry_num, 
         #    on_retry=lambda err, args, num: logger.warning('Failed to fetch chapter list (%s=>%s)', args[0][0], args[0][1]))
+        total_image_num = 0
         @retry(max_num=self.max_retry_num, 
             on_retry=lambda err, args, retry_num: logger.warning('Failed to fetch image list "%s" (%s), retrying.', str(args[0]), str(err)), 
             on_fail=lambda err, args, retry_num: logger.error('Failed to fetch image list "%s" (%s)', str(args[0]), str(err)),
             on_fail_exit=True)
         async def fetch(chapter_name, chapter_url):
+            nonlocal total_image_num
             with (await self.sema):
-                async with self.aiohttp_session.get(chapter_url, verify_ssl=False) as resp:
+                async with self.aiohttp_session.get(chapter_url, verify_ssl=self.verify_ssl) as resp:
                     image_list = await self.parser.parse_image_list(await resp.text())
+                    total_image_num += len(image_list)
                     image_url_list.update({chapter_name: image_list})
         
         loop = asyncio.get_event_loop()
         future_list = []
+
+
         for k, v in chapter_list.items():
             future_list.append(fetch(k, v))
-        loop.run_until_complete(asyncio.gather(*future_list))
+            
 
+                
+        loop.run_until_complete(asyncio.gather(*future_list))
+        self.total_image_num = total_image_num
         return image_url_list
     
     def _start_download(self, image_url_list, comic_name):
@@ -191,7 +209,12 @@ class Scheduler(object):
                 logger.info('Start download: %s', self._generate_download_info(name, save_path))
                 utils.mkdir('/'.join(save_path.split('/')[:-1]))
                 #async with aiohttp.ClientSession(headers=self.header) as session:
-                async with self.aiohttp_session.get(image_url, verify_ssl=False) as resp:
+
+                if self.fetch_only:
+                    logger.warning('Fetch only mode is on, all downloading process will not run')
+                    return
+                
+                async with self.aiohttp_session.get(image_url, verify_ssl=self.verify_ssl) as resp:
                     resp_data = await resp.content.read()
                     if 'on_download_complete' in dir(self.parser):
                         resp_data = getattr(self.parser, 'on_download_complete')(resp_data)
