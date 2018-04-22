@@ -1,13 +1,15 @@
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
 
-from dcdownloader import arg_parse
+from dcdownloader import arg_parse, version
 
 # for unittest
 cmd_args = None
 
 def main():
     args = arg_parse.parser.parse_args(cmd_args)
+
+    version.show_welcome()
     
     from dcdownloader.scheduler import Scheduler
     from dcdownloader import parser_selector
