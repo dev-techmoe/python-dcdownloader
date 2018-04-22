@@ -5,6 +5,11 @@
 echo "Install dependencies"
 pip install -e .
 echo "Build windows executable files"
-pyinstaller -F ${BUILD_APP_ENTRY} --distpath pyinstaller/dist --specpath pyinstaller/spec --workpath pyinstaller/build
+pyinstaller -F ${BUILD_APP_ENTRY} \
+            --distpath pyinstaller/dist \
+            --specpath pyinstaller/spec \
+            --workpath pyinstaller/build \
+            --hidden-import="dcdownloader.parser.*"
+
 echo "Rename output file"
 mv pyinstaller/dist/main.exe  pyinstaller/dist/${BUILD_OUTPUT_FILE_NAME}
