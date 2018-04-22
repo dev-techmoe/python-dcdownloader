@@ -5,60 +5,51 @@
 [![Build Status](https://travis-ci.org/dev-techmoe/python-dcdownloader.svg?branch=master)](https://travis-ci.org/dev-techmoe/python-dcdownloader)
 [![GitHub stars](https://img.shields.io/github/stars/dev-techmoe/python-dcdownloader.svg)](https://github.com/dev-techmoe/python-dcdownloader/stargazers)
 
-由Python编写的全异步实现的动漫之家(dmzj)漫画批量下载器（爬虫）
+专注于漫画网站、图站等类似形式的内容站点的批量下载器框架。
 
 ## 说明
-这是一个使用Python3编写的动漫之家的漫画批量下载器。相比于我之前所写过的几个爬虫，这个爬虫也是我第一次尝试**全异步**实现的一个爬虫例子，使用了*aiohttp*和*aiofile*这两个异步实现库来做支撑，相对于单线程爬虫和多线程爬虫，使用异步(async)这种方式能够更好的分配计算和IO资源，保证了资源的充分利用以及速度。同时，这也是我第一次较为完整编写的一个Python开源项目。
+这个项目最开始是作者编写的一个仅支持某个漫画网站的批量下载器，后来有人提建议说有增加网站的需求，作者便重新梳理了一下思路重构了代码，使其作为一种框架形式存在。DCDownloader是目前一款异步实现的、支持自定义适配的，专注于漫画网站、图站等类似形式的内容站点的批量下载器。通过编写Parser来做到适配不同的网站。   
+目前项目中内置了三个Parser，分别是
 
-## 特点
-* 更高效的资源利用和优秀的速度
-* 彩色控制台终端日志输出（colorlog）
+* SimpleParser  一个Parser的例子，希望自己编写Parser的话可以参考这个的实现，同时也应用于单元测试过程中。
+* DmzjParser 动漫之家漫画站（非原创区）
+* EhentaiParser Ehentai
 
-## 安装 
-* Linux和OSX  
-    ```bash
-    $ git clone git@github.com:dev-techmoe/python-dcdownloader.git
-    $ cd python-dcdownloader
-    $ python3 setup.py install
-    ```
-* Windows平台  
-    依然可以通过安装python的方式来手动安装，也可以到[Release页面](https://github.com/dev-techmoe/python-dcdownloader/releases)下载打包好的二进制可执行文件来使用。
+## 安装
+### Windows 
+[exe可执行文件下载](https://github.com/dev-techmoe/python-dcdownloader/releases)  
 
-## 配置
-配置是可选的，您完全可以不用配置就使用本程序。  
-配置文件名为config.yml，yaml格式，请保存在程序运行的目录下。  
-
-|配置项|说明|默认值|
-| ----- | ----- | ----- |
-|debug_mode|调试模式|False|
-|save_manifest_file|保存元数据以供增量下载 *未完成*|False|
-|proxy|代理服务器|None|
-|downloader_max_connection_number|下载器并发数（最大同时下载任务数）|5|
-|downloader_max_retry_number|下载器最大重试次数|5|
-|friendly_console_output|人类友好的控制台输出 *未完成*|False|
-|header|自定义请求header|默认仅设置了ua和referer|
-
-## 使用
+### Linux/OSX  
+请确认您本机已安装python和pip并且python版本大于3.4.3
+```bash
+$ pip3 install https://github.com/dev-techmoe/python-dcdownloader/archive/master.zip
+$ dcdownloader -h
 ```
-dcdownloader <target_comic_index_page_url> <save_path>
-```
-* `target_comic_index_page_url`: 目标漫画的主页URL
-* `save_path`: （可选）下载保存路径（默认路径为`./output`）  
 
-下载到的漫画将以`<漫画名>/<章节名>/漫画.png`这样的格式来保存  
-e.g.:
+## 可用命令
 ```
-output
-└── 幸运星
-    ├── 入学手册
-    │   ├──  073.jpg
-    │   ├──  074.jpg
-    │   └──  ...
-    ├── ...
+usage: dcdownloader [-h] [--proxy PROXY] [--no-verify-ssl] [-v] [-V] [--fetch-only]
+               URL [OUTPUT_PATH]
+
+positional arguments:
+  URL              target URL
+  OUTPUT_PATH      output path of downloaded file (default: current directory)
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --proxy PROXY    HTTP proxy address for connection
+  --no-verify-ssl  Disable the SSL certificate verifying when connecting
+  -v, --version    show version
+  -V, --verbose    show more running detail
+  --fetch-only     Ignore all download process (only fetch chapter and image urls)
+
 ```
+
 ## 免责声明
-这个项目更多的其实是作为作者个人的练习项目存在，方便使用只是其二。为了不对目标站造成困扰，作者已将默认并发数设置到了一个作者认为不会对其造成影响的程度。由于自身使用所造成的问题作者不付任何责任，同时作者不对任何下载内容承担任何责任。
+这个项目更多的其实是作为作者个人的练习项目存在，方便使用只是其二。为了不对目标站造成困扰，作者已将默认并发数设置到了一个作者认为不会对目标站造成影响的程度。由于使用者自身使用所造成的问题作者不付任何责任，同时作者不对任何下载内容承担任何责任。
+
+## 贡献
+本项目欢迎提交pr，非常希望您能够帮助改善本项目。您可以帮助我来适配更多的网站，但是我目前**不希望用来解析收录原创漫画站的Parser**，还请见谅。
 
 ## License
 MIT
-
