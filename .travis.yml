@@ -25,5 +25,6 @@ deploy:
   on:
     repo: pyinstaller/dist/${BUILD_OUTPUT_FILE_NAME}
     tags: true
+    all_branches: true
   body: "auto published by CI, no more description now."
   prerelease: true
