@@ -1,10 +1,18 @@
 #!/bin/bash
 
-apt install tree
-echo "Install dependencies"
-pip install -e .
-echo "Build windows executable files"
-pyinstaller -F dcdownloader/main.py --distpath pyinstaller/dist --specpath pyinstaller/spec --workpath pyinstaller/build
-tree
-echo "Rename output file"
-mv pyinstaller/dist/main.exe  pyinstaller/dist/dcdownloader_windows_build${TRAVIS_BUILD_NUMBER}.exe
+DOCKER_IMAGE="cdrx/pyinstaller-windows:python3-32bit"
+
+chmod +x ./devscript/*.sh
+
+echo "TRAVIS_BUILD_NUMBER=${TRAVIS_BUILD_NUMBER}"
+echo "BUILD_APP_ENTRY=${BUILD_APP_ENTRY}"
+echo "BUILD_OUTPUT_FILE_NAME=${BUILD_OUTPUT_FILE_NAME}"
+echo "DOCKER_IMAGE=${DOCKER_IMAGE}"
+
+# pull the docker images and create the container for build
+docker pull ${DOCKER_IMAGE}
+docker run -v "$(pwd):/src/" \
+        -e "TRAVIS_BUILD_NUMBER=${TRAVIS_BUILD_NUMBER}" \
+        -e "BUILD_APP_ENTRY=${BUILD_APP_ENTRY}" \
+        -e "BUILD_OUTPUT_FILE_NAME=${BUILD_OUTPUT_FILE_NAME}" \
+        ${DOCKER_IMAGE} "chmod +x devscript/build_pyinstaller_windows.sh && devscript/build_pyinstaller_windows.sh"
