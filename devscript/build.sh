@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DOCKER_IMAGE = "cdrx/pyinstaller-windows:python3-32bit"
+DOCKER_IMAGE="cdrx/pyinstaller-windows:python3-32bit"
 
 chmod +x ./devscript/*.sh
 
