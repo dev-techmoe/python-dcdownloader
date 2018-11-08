@@ -1,14 +1,18 @@
 from setuptools import find_packages, setup
 
+# load requirement list
+with open('requirements.txt') as f:
+    required_modules = f.read().splitlines()
+
 setup(
     name='DCDownloader',
     version='1.0',
-    description="Downloader for www.dmzj.com 动漫之家漫画下载器",
+    description="a downloader that supports many comic sites",
     author='techmoe',
-    url='',
+    url='https://github.com/dev-techmoe/python-dcdownloader',
     license='MIT',
-    packages=['dcdownloader'],
-    install_requires=['aiohttp', 'colorlog', 'aiofiles', 'pyquery', 'pyyaml', 'filetype'],
+    packages=find_packages(include='dcdownloader.*'),
+    install_requires=required_modules,
     entry_points="""
     [console_scripts]
     dcdownloader = dcdownloader.main:main
