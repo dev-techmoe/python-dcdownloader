@@ -12,7 +12,7 @@ class ProxyConnector(aiohttp.connector.TCPConnector):
 
         super().__init__(*args, **kwargs)
 
-    async def _create_connection(self, req, traces=None):
+    async def _create_connection(self, req, traces=None, timeout=None):
         if req.proxy == None and 'proxy' in dir(self):
             # req.setdefault('proxy', URL(self.proxy))
             req.proxy = URL(self.proxy)
@@ -20,12 +20,14 @@ class ProxyConnector(aiohttp.connector.TCPConnector):
         if req.proxy:
             _, proto = await super()._create_proxy_connection(
                 req,
-                traces=traces
+                traces=traces,
+                timeout=timeout
             )
         else:
             _, proto = await super()._create_direct_connection(
                 req,
-                traces=traces
+                traces=traces,
+                timeout=timeout
             )
 
         return proto
