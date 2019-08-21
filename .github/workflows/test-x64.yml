@@ -10,6 +10,7 @@ jobs:
         with:
           python-version: '3.7'
           architecture: 'x64'
+      - run: ls
       - run: pip install flask
       - run: pip install .
       - run: pytest test
