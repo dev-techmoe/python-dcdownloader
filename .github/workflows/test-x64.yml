@@ -1,5 +1,5 @@
 name: test-x64
-# on: [push]
+on: [push]
 
 jobs:
   test:
