@@ -1,0 +1,15 @@
+name: test-x64
+# on: [push]
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.7'
+          architecture: 'x64'
+      - run: pip install flask
+      - run: pip install .
+      - run: pytest test
