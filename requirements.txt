@@ -1,5 +1,5 @@
 aiofiles==0.4.0
-aiohttp==3.4.4
+aiohttp==3.7.4
 astroid==2.0.4
 async-timeout==3.0.1
 attrs==18.2.0
