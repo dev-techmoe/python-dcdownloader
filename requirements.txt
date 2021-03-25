@@ -15,7 +15,7 @@ mccabe==0.6.1
 multidict==4.4.2
 pylint==2.1.1
 pyquery==1.4.0
-PyYAML==5.1
+PyYAML==5.4
 six==1.11.0
 wrapt==1.10.11
 yarl==1.2.6
